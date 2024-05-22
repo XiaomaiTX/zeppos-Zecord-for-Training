@@ -1,16 +1,16 @@
 {
   "configVersion": "v3",
   "app": {
-    "appId": 20652,
-    "appName": "Running Pace Master",
+    "appId": 1054913,
+    "appName": "Zecord for Training",
     "appType": "app",
     "extType": "workout",
     "version": {
       "code": 1,
-      "name": "1.0.1"
+      "name": "1.0.0"
     },
     "icon": "icon.png",
-    "vender": "huami",
+    "vender": "XiaomaiTX",
     "description": ""
   },
   "permissions": [],
@@ -27,8 +27,8 @@
         "data-widget": {
           "widgets": [
             {
-              "path": "data-widget/common/index",
-              "name": "Running Pace Master",
+              "path": "data-widget/common/index.page",
+              "name": "Zecord",
               "icon": "icon.png",
               "window": {
                 "isPinned": 1
