@@ -3,24 +3,22 @@ import { px } from "@zos/utils";
 
 export const SWITCH_BUTTON = {
     x: (px(480)-64)/2,
-    y: px(380),
+    y: px(370),
     text: "",
-    w: 64,
-    h: 64,
-    radius: 32,
-    normal_color: 0xfc6950,
-    press_color: 0xfeb4a8,
+    w: -1,
+    h: -1,
+    normal_src: 'switch.png',
+    press_src: 'switch_press.png',
 };
 
 export const RECORD_BUTTON = {
-    x: px(480-100)/2,
-    y: px(480-100)/2,
+    x: px(480-150)/2,
+    y: px(480-150)/2,
     text: "",
-    w: px(100),
-    h: px(100),
-    radius: px(50),
-    normal_color: 0xfc6950,
-    press_color: 0xfeb4a8,
+    w: -1,
+    h: -1,
+    normal_src: 'record.png',
+    press_src: 'record_press.png',
 };
 export const TITLE = {
     x: px(0),
