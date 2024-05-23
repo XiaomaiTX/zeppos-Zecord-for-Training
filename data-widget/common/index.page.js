@@ -84,7 +84,7 @@ DataWidget({
                 });
             } else {
                 title.setProperty(hmUI.prop.MORE, {
-                    text: getText("not_recorded"),
+                    text: getText("non_recorded"),
                 });
                 record_button.setProperty(hmUI.prop.MORE, {
                     ...STYLE.RECORD_BUTTON,
