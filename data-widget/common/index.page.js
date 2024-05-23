@@ -10,106 +10,133 @@ const dateStr = date.getFullYear() + date.getMonth() + date.getDate();
 
 /*
 
-TODO:
-- 检测卡路里到达标准即打卡成功
-- 持久化存储
-- 显示打卡天数
+
 
 */
-const CALORIRS_GOAL = 1000;
+
+const pages = ["record", "7days", "14days", "28days"];
 
 DataWidget({
-    init() {},
+    init() {
+        // 清理30days以前的记录
+        const oldKeys = flash.getAllKeys();
+        for (let i = 0; i < oldKeys.length; i++) {
+            if (oldKeys[i] < dateStr) {
+                flash.removeKey(oldKeys[i]);
+            }
+        }
+    },
     build() {
         this.init();
-        const CaloriesProgress = hmUI.createWidget(
-            hmUI.widget.ARC,
-            STYLE.CALORIES_PROGRESS
-        );
-        const GoalDaysViewer = hmUI.createWidget(
-            hmUI.widget.TEXT,
-            STYLE.GOAL_DAYS
-        );
-        // const TodayStatus = hmUI.createWidget(
-        //     hmUI.widget.IMG,
-        //     STYLE.TODAY_STATUS
-        // );
-        main();
-        function fetchCalories() {
-          console.log("fetchCalories");
-            // const result = getSportData(
-            //     {
-            //         type: "calories",
-            //     },
-            //     (callbackResult) => {
-            //         const { code, data } = callbackResult;
-            //         if (code === 0) {
-            //             const { calories } = data;
-            //             console.log(calories);
-            //         }
-            //     }
-            // );
-
-            return hmUI.sport_data.CONSUME;
-        }
-        function initFlash() {
-            if (flash.hasKey("isInit") == false) {
-                flash.setKey("isInit", true);
-                flash.setKey("goal_days", 0);
-            }
-        }
-        function main() {
-            initFlash();
-            console.log("main");
-            // 检测今天是否已经完成目标
-            if (true) {//flash.hasKey(dateStr) == false
-                const cal = fetchCalories();
-                console.log('cal ' + cal);
-                switch (true) {
-                    case cal>=0 && cal < CALORIRS_GOAL:
-                      console.log("未达标");
-                        const calProgressVal = -90 + (cal / CALORIRS_GOAL) * 360;
-                        console.log(calProgressVal);
-                        GoalDaysViewer.setProperty(hmUI.prop.MORE, {
-                            text: cal,
-                        });
-                        CaloriesProgress.setProperty(hmUI.prop.MORE, {
-                          end_angle: calProgressVal,
-                      });
-      
-                        break;
-
-                    case cal >= CALORIRS_GOAL:
-                      console.log("达标");
-                        // 触发打卡成功事件
-                        CaloriesProgress.setProperty(hmUI.prop.MORE, {
-                          end_angle: 270,
-                      });
-
-                        finishGoal();
-                    default:
-                        console.log("d");
-                        break;
+        const title = hmUI.createWidget(hmUI.widget.TEXT, STYLE.TITLE);
+        const switch_button = hmUI.createWidget(hmUI.widget.BUTTON, {
+            ...STYLE.SWITCH_BUTTON,
+            click_func: () => {
+                console.log("button click");
+                // 跳转至下一页面
+                const index = pages.indexOf(pageStatus);
+                if (index < pages.length - 1) {
+                    pageStatus = pages[index + 1];
+                } else {
+                    pageStatus = pages[0];
                 }
-            } else {
-              console.log("已完成");
-                // 今天已经完成目标
-                CaloriesProgress.setProperty(hmUI.prop.MORE, {
-                    end_angle: 270,
-                });
-                GoalDaysViewer.setProperty(hmUI.prop.MORE, {
-                    text: `达成目标 ${flash.getKey("goal_days")} 天`,
-                });
+                gotoPage(pageStatus);
+            },
+        });
+        const record_button = hmUI.createWidget(
+            hmUI.widget.BUTTON,
+            STYLE.RECORD_BUTTON
+        );
+        record_button.setProperty(hmUI.prop.VISIBLE, true);
+        const record_viewer = hmUI.createWidget(
+            hmUI.widget.TEXT,
+            STYLE.RECORD_VIEWER
+        );
+        record_viewer.setProperty(hmUI.prop.VISIBLE, false);
+
+        gotoPage("record");
+
+        function gotoPage(page) {
+            switch (page) {
+                case "record":
+                    record();
+                    break;
+                case "7days":
+                    history(7);
+                    break;
+                case "14days":
+                    history(14);
+                    break;
+                case "28days":
+                    history(28);
+                    break;
+                default:
+                    break;
             }
         }
-        function finishGoal() {
-            // 打卡成功
-            // TODO: 打卡成功后持久化存储
-            flash.setKey("goal_days", flash.getKey("goal_days") + 1);
-            flash.setKey(dateStr, true);
-            GoalDaysViewer.setProperty(hmUI.prop.MORE, {
-                text: `达成目标 ${flash.getKey("goal_days")} 天`,
+        function record() {
+            record_viewer.setProperty(hmUI.prop.VISIBLE, false);
+            record_button.setProperty(hmUI.prop.VISIBLE, true);
+            if (flash.hasKey(dateStr)) {
+                title.setProperty(hmUI.prop.MORE, {
+                    text: "今日已打卡",
+                });
+            } else {
+                title.setProperty(hmUI.prop.MORE, {
+                    text: "今日未打卡",
+                });
+                record_button.setProperty(hmUI.prop.MORE, {
+                    ...STYLE.RECORD_BUTTON,
+                    click_func: () => {
+                        if (flash.hasKey(dateStr)) {
+                        } else {
+                            flash.setKey(dateStr, 1);
+                            title.setProperty(hmUI.prop.MORE, {
+                                text: "打卡成功",
+                            });
+                        }
+                    },
+                });
+    
+            }
+
+        }
+        function history(day) {
+            record_button.setProperty(hmUI.prop.VISIBLE, false);
+            record_viewer.setProperty(hmUI.prop.VISIBLE, true);
+            title.setProperty(hmUI.prop.MORE, {
+                text: `${day} Days Record`,
             });
+            record_viewer.setProperty(hmUI.prop.TEXT, getRecordText(day));
+        }
+        function getRecordText(day) {
+            let keys = flash.getAllKeys();
+            console.log(keys);
+            /*
+            
+            */
+            recordData = [];
+            for (let i = 0; i < keys.length; i++) {
+                recordData.push(flash.getKey(keys[i]));
+            }
+            if (keys.length < day) {
+                // 视作0在前面补全
+                for (let i = 0; i < day - keys.length; i++) {
+                    recordData.unshift(0);
+                }
+            }
+            console.log(recordData);
+            let recordText = "";
+            for (let i = 0; i < recordData.length; i++) {
+                if (recordData[i] == 1) {
+                    recordText += "●";
+                } else {
+                    recordText += "○";
+                }
+            }
+            // 每7个为一行，添加换行符
+            recordText = recordText.replace(/(.{7})/g, "$1\n");
+            return recordText;
         }
     },
     onInit() {},
