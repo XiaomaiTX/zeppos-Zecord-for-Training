@@ -1,0 +1,11 @@
+msgid "recorded"
+msgstr "Today Recorded"
+
+msgid "non_recorded"
+msgstr "Today Not Recorded"
+
+msgid "record_success"
+msgstr "Record Success"
+
+msgid "days record"
+msgstr "Days Record"

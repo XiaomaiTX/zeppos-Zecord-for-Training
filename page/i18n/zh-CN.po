@@ -1,0 +1,11 @@
+msgid "recorded"
+msgstr "今日已打卡"
+
+msgid "non_recorded"
+msgstr "今日未打卡"
+
+msgid "record_success"
+msgstr "打卡成功"
+
+msgid "days record"
+msgstr "天打卡记录"

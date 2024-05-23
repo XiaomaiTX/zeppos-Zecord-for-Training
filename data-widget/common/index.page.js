@@ -3,6 +3,7 @@ import * as STYLE from "zosLoader:./index.page.[pf].layout.js";
 import { getSportData } from "@zos/app-access";
 import { Time } from "@zos/sensor";
 import { EasyFlashStorage } from "@silver-zepp/easy-storage";
+import { getText } from '@zos/i18n'
 
 const flash = new EasyFlashStorage("zecord_for_training");
 const date = new Date();
@@ -79,11 +80,11 @@ DataWidget({
             record_button.setProperty(hmUI.prop.VISIBLE, true);
             if (flash.hasKey(dateStr)) {
                 title.setProperty(hmUI.prop.MORE, {
-                    text: "今日已打卡",
+                    text: getText("recorded"),
                 });
             } else {
                 title.setProperty(hmUI.prop.MORE, {
-                    text: "今日未打卡",
+                    text: getText("not_recorded"),
                 });
                 record_button.setProperty(hmUI.prop.MORE, {
                     ...STYLE.RECORD_BUTTON,
@@ -92,7 +93,7 @@ DataWidget({
                         } else {
                             flash.setKey(dateStr, 1);
                             title.setProperty(hmUI.prop.MORE, {
-                                text: "打卡成功",
+                                text: getText("record_success"),
                             });
                         }
                     },
@@ -105,7 +106,7 @@ DataWidget({
             record_button.setProperty(hmUI.prop.VISIBLE, false);
             record_viewer.setProperty(hmUI.prop.VISIBLE, true);
             title.setProperty(hmUI.prop.MORE, {
-                text: `${day} Days Record`,
+                text: `${day} ${getText("days record")}`,
             });
             record_viewer.setProperty(hmUI.prop.TEXT, getRecordText(day));
         }
